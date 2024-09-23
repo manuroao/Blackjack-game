@@ -30,3 +30,26 @@ html, body {
 .row {
   width: 100%;
 }
+
+#mensaje-resultado {
+  background-color: #f0f0f0;
+  border: 2px solid #333;
+  border-radius: 10px;
+  color: #333;
+  font-size: 24px;
+  padding: 20px;
+  position: fixed;
+  top:50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 1000;
+}
+
+.mensaje-visible {
+  display: block;
+}
+
+.mensaje-oculto {
+  display: none;
+}
