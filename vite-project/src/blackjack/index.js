@@ -1,4 +1,9 @@
-import {crear_deck} from './usecases/crear-deck.js';
+import {crear_deck, 
+    pedir_carta,  
+    actualizar_puntos,
+    crear_carta,
+    turno_computadora,
+    ganador} from './usecases/'
 
 (() => {
 
@@ -8,123 +13,42 @@ import {crear_deck} from './usecases/crear-deck.js';
        puntos_jugadores = [];
   
   // Referencias HTML
-  const boton_nuevo = document.querySelector('#boton-nuevo-juego'),
-        boton_pedir = document.querySelector('#boton-pedir'),
-        boton_detener = document.querySelector('#boton-detener'),
-        puntosHTML = document.querySelectorAll('small'),
+  const puntosHTML = document.querySelectorAll('small'),
         cartas = document.querySelectorAll('.div-cartas'),
-        mensajeResultado = document.querySelector('#mensaje-resultado');
-
-  
-  // Esta función me permite tomar una carta
-  const pedir_carta = () => {
-      if (deck.length ===0) {
-          throw 'No hay cartas en el deck';
-      }
-      return deck.pop();
-  }
-  
-
-  // Esta función me permite saber el valor de una carta
-  const valor_carta = (carta) => {
-      const valor = carta.substring(0, carta.length - 1);
-      return (isNaN(valor)) ?
-              (valor === 'A') ? 11 : 10
-              : valor * 1;
-  }
+        mensajeResultado = document.querySelector('#mensaje-resultado'),
+        botones = document.querySelectorAll('.btn');
   
   
   // Eventos
-  
+  console.log(botones[0]);
   // Inicio del juego
-  boton_nuevo.addEventListener('click', main);
-  
-  
-  const crear_carta = (carta, turno) => {
-      const img_carta = document.createElement('img');
-      img_carta.src = `assets/cartas/${carta}.png`;
-      img_carta.classList.add('carta');
-      cartas[turno].append(img_carta);
-  }
-  
-  const actualizar_puntos = (turno, carta) => {
-      puntos_jugadores[turno] = puntos_jugadores[turno] + valor_carta(carta);
-      puntosHTML[turno].innerText = puntos_jugadores[turno];
-  }
-
-  const turno_computadora = ( puntos_minimos ) =>{
-  
-      do {
-
-          const carta = pedir_carta();
-          actualizar_puntos(puntos_jugadores.length - 1, carta);
-          crear_carta(carta, puntos_jugadores.length - 1);
-      
-      } while ((puntos_jugadores[puntos_jugadores.length - 1] < puntos_minimos) && (puntos_minimos <= 21));
-  
-      setTimeout(() => {
-          ganador();
-      }, 100);
-  
-  }
-  
-    
-
-    const mostrarMensaje = (mensaje) => {        
-        // Asegúrate de que el div existe en el DOM
-        if (mensajeResultado) {
-            mensajeResultado.innerText = mensaje;
-            mensajeResultado.classList.remove('mensaje-oculto');
-            mensajeResultado.classList.add('mensaje-visible');
-        } else {
-            console.error('No se encontró el div con id "mensaje-resultado"');
-        }
-
-        console.log(mensajeResultado);
-    };
-
-
-  const ganador = () => {
-        const [puntos_jugador, puntos_computadora] = puntos_jugadores;
-        const jugador_gana = ((puntos_jugador <= 21) && (puntos_jugador > puntos_computadora)) || (puntos_computadora > 21);
-        const computadora_gana = ((puntos_computadora <= 21) && (puntos_computadora > puntos_jugador)) || (puntos_jugador > 21);
-    
-        if (puntos_jugador === puntos_computadora) {
-            mostrarMensaje('Empate :|');
-        } else if (jugador_gana) {
-            mostrarMensaje('Ganaste :)');
-        } else if (computadora_gana) {
-            mostrarMensaje('Perdiste :(');
-        }
-  }
-
+  botones[0].addEventListener('click', main);
 
   // Pedir carta
-  boton_pedir.addEventListener('click', () => {
+  botones[1].addEventListener('click', () => {
   
-      const carta = pedir_carta();
-      actualizar_puntos(0, carta);    
-      crear_carta(carta, 0);
+        const carta = pedir_carta(deck);
+        puntos_jugadores[0] = actualizar_puntos(puntos_jugadores[0], carta, puntosHTML[0]);
+        crear_carta(carta, cartas[0]);
   
-      if (puntos_jugadores[0] > 21) {
-          botones(true);
-          turno_computadora(puntos_jugadores[0]);
-          ganador();
-      } else if (puntos_jugadores[0] === 21) {
-          botones(true);
-          turno_computadora(puntos_jugadores[0]);
-          ganador();
-      }
-  
-  });
-  
-  
-  // Detener
-  boton_detener.addEventListener('click', () => {
-  
-      botones(true);
-      turno_computadora(puntos_jugadores[0]);
-  
+        if (puntos_jugadores[0] > 21) {
+            actualizarBotones(true);
+            puntos_jugadores[1] = turno_computadora(puntos_jugadores[0], deck, cartas[1], puntos_jugadores[1], puntosHTML[1]);
+            ganador(puntos_jugadores, mensajeResultado);
+        } else if (puntos_jugadores[0] === 21) {
+            actualizarBotones(true);
+            puntos_jugadores[1] = turno_computadora(puntos_jugadores[0], deck, cartas[1], puntos_jugadores[1], puntosHTML[1]);
+            ganador(puntos_jugadores, mensajeResultado);
+        }
+        
+    });
+    
+    
+    // Detener
+    botones[2].addEventListener('click', () => {
+        actualizarBotones(true);
+        puntos_jugadores[1] = turno_computadora(puntos_jugadores[0], deck, cartas[1], puntos_jugadores[1], puntosHTML[1]);
+        ganador(puntos_jugadores, mensajeResultado)
   });
 
   const inicializar_juego = ( num_jugadores = 2 ) => {
@@ -139,15 +63,15 @@ import {crear_deck} from './usecases/crear-deck.js';
         mensajeResultado.classList.add('mensaje-oculto');
   }
   
-  const botones = (flag) => {
-      boton_pedir.disabled = flag;
-      boton_detener.disabled = flag;
+  const actualizarBotones = (flag) => {
+      botones[1].disabled = flag;
+      botones[2].disabled = flag;
   }
 
   // Función principal
   function main() {
       inicializar_juego();    
-      botones(false);
+      actualizarBotones(false);
   }
 
   return {
