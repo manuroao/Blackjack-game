@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/" href="./assets/cartas/red_back.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- BOOTSTRAP  -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Blackjack</title>  
+    <script type="module" crossorigin src="/Blackjack-game/assets/index-Cy9OwPOz.js"></script>
+    <link rel="stylesheet" crossorigin href="/Blackjack-game/assets/index-BSMpDqJV.css">
+  </head>
+  <body>
+
+    <header class="titulo">
+      Blackjack
+    </header>
+
+    <div class="row mt-2">
+        <div class="col text-center" id="div-botones">
+          <button class="btn btn-danger" id="boton-nuevo-juego">Nuevo Juego</button>
+          <button class="btn btn-primary" id="boton-pedir" disabled>Pedir Carta</button>
+          <button class="btn btn-primary" id="boton-detener" disabled>Detener</button>
+        </div>
+    </div>
+
+    <div class="row container">
+      <div class="col">
+          <h1>Jugador - <small>0</small></h1>
+          <div id="jugador-cartas" class="div-cartas">
+              <!-- <img src="assets/cartas/10C.png" alt="carta" class="carta"> -->
+          </div>
+      </div>
+    </div>
+
+    <div class="row container mt-2">
+      <div class="col">
+          <h1>Computadora - <small>0</small></h1>
+          <div id="computadora-cartas" class="div-cartas">
+              <!-- <img src="assets/cartas/10C.png" alt="carta" class="carta"> -->
+          </div>
+        </div>
+    </div>
+
+    <div id="mensaje-resultado" class="mensaje-oculto">
+    </div>
+    <div id="app"></div>
+  </body>
+</html>
